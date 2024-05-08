@@ -9,8 +9,9 @@ const personSchema = new Schema({
   name: String,
   age: Number,
   favoriteFoods: [String]
-
 })
+
+
 
 const Person = mongoose.model("Person", personSchema);
 
@@ -131,16 +132,36 @@ const removeById = (personId, done) => {
   
 };
 
+// const removeManyPeople = (done) => {
+//   const nameToRemove = "Mary";
+
+//   done(null /*, data*/);
+// };
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
+  Person.remove({name: nameToRemove}, (err, removed) => {
+    if (err) return console.log(err);
+    done(null, removed)
+  })
 
-  done(null /*, data*/);
 };
 
+
+// const queryChain = (done) => {
+//   const foodToSearch = "burrito";
+
+//   done(null /*, data*/);
+// };
 const queryChain = (done) => {
   const foodToSearch = "burrito";
-
-  done(null /*, data*/);
+  Person.find({favoriteFoods: foodToSearch})
+  .sort({name: 1})// Here: 1 for ascending	order and -1 for descending order.
+  .limit(2)//Limit results to 2
+  .select({age: 0})
+  .exec(function (err, data){
+    if (err) return console.log(err);
+    done(null, data)
+  })
 };
 
 /** **Well Done !!**
